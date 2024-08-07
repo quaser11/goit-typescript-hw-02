@@ -9,7 +9,6 @@ import ErrorMessage from "./ErrorMessage/ErrorMessage.jsx";
 import ImageModal from "./ImageModal/ImageModal.jsx";
 import iziToast from "izitoast";
 import 'izitoast/dist/css/iziToast.min.css';
-import errorMessage from "./ErrorMessage/ErrorMessage.jsx";
 
 // state machine = idle, pending, reject, resolve
 const App = () => {
@@ -37,7 +36,6 @@ const App = () => {
                 }
                 setData(res.data.results);
                 setState('resolve')
-
             }).catch(err => {
                 setError(err.message)
                 setState('reject')
@@ -49,14 +47,11 @@ const App = () => {
         }
     }, [query]);
 
-    const onLoadMoreClick = () => {
-        setPage(() => page + 1);
-
+    useEffect(() => {
         setState('pending')
         setError(null);
-        getImages(query, page + 1).then((res) => {
+        getImages(query, page).then((res) => {
             setData([...data, ...res.data.results])
-            console.log(page)
             setState('resolve')
         }).catch(err => {
                 setError(err.message)
@@ -67,6 +62,10 @@ const App = () => {
                 })
             }
         )
+    }, [page]);
+
+    const onLoadMoreClick = () => {
+        setPage(prev => prev + 1);
     }
 
     const openModal = () => {
@@ -79,6 +78,12 @@ const App = () => {
 
     const getModalImage = (image) => {
         setModalImage(image)
+    }
+
+    const onSmallImageClick = (cardData) => {
+        openModal()
+
+        getModalImage(cardData.urls.regular)
     }
 
     if (state === 'idle') {
@@ -98,7 +103,8 @@ const App = () => {
         return <>
             <Container>
             <SearchBar onSubmit={onSubmit}/>
-            <ImageGallery data={data} onImageClick={openModal} getModalImage={getModalImage}/>
+                {/* eslint-disable-next-line react/jsx-no-duplicate-props */}
+            <ImageGallery data={data} onImageClick={openModal} getModalImage={getModalImage} onImageClick={onSmallImageClick}/>
                 {state === 'pending' ? <Loader/> : <LoadMoreBtn onClick={onLoadMoreClick}/>}
             </Container>
             <ImageModal onRequestClose={closeModal} isOpen={modalIsOpen} image={modalImage}/>

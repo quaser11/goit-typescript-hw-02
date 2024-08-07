@@ -20,7 +20,7 @@ const ImageModal = ({image, onRequestClose, isOpen}) => {
             overflow: 'hidden',
         },
         overlay: {
-            'background-color': '#00000075',
+            backgroundColor: '#00000075',
         }
     }
 
