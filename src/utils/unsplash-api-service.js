@@ -12,7 +12,6 @@ export const getImages = async (query, page) => {
         orientation: 'landscape',
     }
 
-    console.log(page)
     const data = await axios.get('/search/photos', {params})
 
     return data

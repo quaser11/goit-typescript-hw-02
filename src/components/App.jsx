@@ -7,7 +7,7 @@ import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn.jsx";
 import Loader from "./Loader/Loader.jsx";
 import ErrorMessage from "./ErrorMessage/ErrorMessage.jsx";
 import ImageModal from "./ImageModal/ImageModal.jsx";
-import iziToast from "izitoast";
+import toast, {Toaster} from 'react-hot-toast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 // state machine = idle, pending, reject, resolve
@@ -20,15 +20,10 @@ const App = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [modalImage, setModalImage] = useState(null);
 
-    const onSubmit = (values) => {
-        setQuery(values);
-    }
-
     useEffect(() => {
-        if (query !== '') {
+        if (query !== '' && page === 1) {
             setState('pending')
             setError(null);
-            setPage(1)
             getImages(query, page).then((res) => {
 
                 if (res.data.total === 0) {
@@ -39,30 +34,33 @@ const App = () => {
             }).catch(err => {
                 setError(err.message)
                 setState('reject')
-                iziToast.show({
-                    message: err.message,
-                    color: 'red'
-                })
+                toast.error(err.message)
             });
         }
-    }, [query]);
 
-    useEffect(() => {
-        setState('pending')
-        setError(null);
-        getImages(query, page).then((res) => {
-            setData([...data, ...res.data.results])
-            setState('resolve')
-        }).catch(err => {
-                setError(err.message)
-                setState('reject')
-                iziToast.show({
-                    message: err.message,
-                    color: 'red'
-                })
-            }
-        )
-    }, [page]);
+        if(page !== 1){
+            setState('pending')
+            setError(null);
+            getImages(query, page).then((res) => {
+                setData([...data, ...res.data.results])
+                setState('resolve')
+            }).catch(err => {
+                    setError(err.message)
+                    setState('reject')
+                    toast.error(err.message)
+                }
+            )
+        }
+    }, [query, page]);
+
+    const onSubmit = (values) => {
+        if(values === ''){
+            toast.error('Please fill out the form');
+            return
+        }
+        setQuery(values);
+        setPage(1)
+    }
 
     const onLoadMoreClick = () => {
         setPage(prev => prev + 1);
@@ -89,13 +87,22 @@ const App = () => {
     if (state === 'idle') {
         return <Container>
             <SearchBar onSubmit={onSubmit}/>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </Container>
+
     }
 
     if (state === 'pending' && query ===  '') {
         return <Container>
             <SearchBar onSubmit={onSubmit}/>
             <Loader/>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </Container>
     }
 
@@ -108,6 +115,10 @@ const App = () => {
                 {state === 'pending' ? <Loader/> : <LoadMoreBtn onClick={onLoadMoreClick}/>}
             </Container>
             <ImageModal onRequestClose={closeModal} isOpen={modalIsOpen} image={modalImage}/>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </>
     }
 
@@ -115,6 +126,10 @@ const App = () => {
         return <Container>
             <SearchBar onSubmit={onSubmit}/>
             <ErrorMessage message={error}/>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </Container>
     }
 }
