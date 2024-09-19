@@ -1,26 +1,29 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, FC} from 'react'
 import {Container} from './App.styled.js'
-import {getImages} from "../utils/unsplash-api-service.js";
-import SearchBar from "./SearchBar/SearchBar.jsx";
-import ImageGallery from "./ImageGallery/ImageGallery.jsx";
-import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn.jsx";
-import Loader from "./Loader/Loader.jsx";
+import {getImages} from "../utils/unsplash-api-service.ts";
+import SearchBar from "./SearchBar/SearchBar.js";
+import ImageGallery from "./ImageGallery/ImageGallery.js";
+import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn.js";
+import Loader from "./Loader/Loader.js";
 import ErrorMessage from "./ErrorMessage/ErrorMessage.jsx";
-import ImageModal from "./ImageModal/ImageModal.jsx";
+import ImageModal from "./ImageModal/ImageModal.js";
 import toast, {Toaster} from 'react-hot-toast';
 import 'izitoast/dist/css/iziToast.min.css';
+import {results} from "../utils/types";
 
 // state machine = idle, pending, reject, resolve
-const App = () => {
-    const [query, setQuery] = useState('');
-    const [page, setPage] = useState(1);
-    const [data, setData] = useState([]);
-    const [state, setState] = useState('idle')
-    const [error, setError] = useState(null);
-    const [modalIsOpen, setIsOpen] = useState(false);
-    const [modalImage, setModalImage] = useState(null);
+type StateMachine = "idle" | "pending" | "reject" | "resolve"
 
-    useEffect(() => {
+const App:FC = () => {
+    const [query, setQuery] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+    const [data, setData] = useState<results[]>([]);
+    const [state, setState] = useState<StateMachine>('idle')
+    const [error, setError] = useState<string | null>(null);
+    const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+    const [modalImage, setModalImage] = useState<string>('');
+
+    useEffect((): void => {
         if (query !== '' && page === 1) {
             setState('pending')
             setError(null);
@@ -53,7 +56,7 @@ const App = () => {
         }
     }, [query, page]);
 
-    const onSubmit = (values) => {
+    const onSubmit:(values: string) => void = (values) => {
         if(values === ''){
             toast.error('Please fill out the form');
             return
@@ -62,23 +65,23 @@ const App = () => {
         setPage(1)
     }
 
-    const onLoadMoreClick = () => {
+    const onLoadMoreClick:() => void = () => {
         setPage(prev => prev + 1);
     }
 
-    const openModal = () => {
+    const openModal: () => void = () => {
         setIsOpen(true);
     }
 
-    const closeModal = () => {
+    const closeModal: () => void = () => {
         setIsOpen(false);
     }
 
-    const getModalImage = (image) => {
+    const getModalImage: (image:string) => void = (image) => {
         setModalImage(image)
     }
 
-    const onSmallImageClick = (cardData) => {
+    const onSmallImageClick:(cardData:results) => void = (cardData) => {
         openModal()
 
         getModalImage(cardData.urls.regular)
@@ -111,7 +114,7 @@ const App = () => {
             <Container>
             <SearchBar onSubmit={onSubmit}/>
                 {/* eslint-disable-next-line react/jsx-no-duplicate-props */}
-            <ImageGallery data={data} onImageClick={openModal} getModalImage={getModalImage} onImageClick={onSmallImageClick}/>
+            <ImageGallery data={data}  onImageClick={onSmallImageClick}/>
                 {state === 'pending' ? <Loader/> : <LoadMoreBtn onClick={onLoadMoreClick}/>}
             </Container>
             <ImageModal onRequestClose={closeModal} isOpen={modalIsOpen} image={modalImage}/>

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {FC} from 'react';
 import Modal from 'react-modal'
 
 Modal.setAppElement('#modal');
 
-const ImageModal = ({image, onRequestClose, isOpen}) => {
+interface IImageModalProps {
+    image:string,
+    onRequestClose: () => void,
+    isOpen: boolean,
+}
+const ImageModal:FC<IImageModalProps> = ({image, onRequestClose, isOpen}) => {
 
     const customStyles = {
         content: {

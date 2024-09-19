@@ -1,6 +1,6 @@
 import {Spinner} from "./Loader.styled.js";
-
-const Loader = () => {
+import {FC} from 'react'
+const Loader:FC = () => {
     return <Spinner />
 }
 

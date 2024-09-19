@@ -1,15 +1,21 @@
 import {Header, Form, Input, Button} from './SearchBar.styled.js'
+import {FC, FormEvent} from 'react'
 
-const SearchBar = ({onSubmit}) => {
+interface ISearchBarProps {
+    onSubmit: (values:string) => void
+}
 
-    const onHandleSubmit = (e) => {
+const SearchBar:FC<ISearchBarProps> = ({onSubmit}) => {
+
+    const onHandleSubmit:(e:FormEvent<HTMLFormElement>) => void = (e) => {
         e.preventDefault()
 
-        const elements = e.target.elements
+        const form = e.target as HTMLFormElement
+        const elements = form.elements as HTMLFormControlsCollection
 
-        onSubmit(elements[0].value)
+        onSubmit((elements[0] as HTMLInputElement).value)
 
-        e.target.reset()
+        form.reset()
     }
 
     return <Header>
