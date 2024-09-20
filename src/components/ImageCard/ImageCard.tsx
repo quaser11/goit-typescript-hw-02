@@ -1,6 +1,6 @@
 import {Item} from './ImageCard.styled.js'
 import {FC} from "react";
-import {results} from "../../utils/types.js";
+import {results} from "../../utils/types";
 
 interface IImageCardProps {
     cardData: results

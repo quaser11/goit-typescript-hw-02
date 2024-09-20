@@ -1,4 +1,4 @@
-import ImageCard from '../ImageCard/ImageCard.js';
+import ImageCard from '../ImageCard/ImageCard';
 import {List} from './ImageGallery.styled.js'
 import {results} from "../../utils/types";
 import {FC} from 'react'

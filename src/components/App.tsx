@@ -1,12 +1,12 @@
 import {useState, useEffect, FC} from 'react'
 import {Container} from './App.styled.js'
-import {getImages} from "../utils/unsplash-api-service.ts";
-import SearchBar from "./SearchBar/SearchBar.js";
-import ImageGallery from "./ImageGallery/ImageGallery.js";
-import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn.js";
-import Loader from "./Loader/Loader.js";
-import ErrorMessage from "./ErrorMessage/ErrorMessage.jsx";
-import ImageModal from "./ImageModal/ImageModal.js";
+import {getImages} from "../utils/unsplash-api-service";
+import SearchBar from "./SearchBar/SearchBar";
+import ImageGallery from "./ImageGallery/ImageGallery";
+import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
+import Loader from "./Loader/Loader";
+import ErrorMessage from "./ErrorMessage/ErrorMessage";
+import ImageModal from "./ImageModal/ImageModal";
 import toast, {Toaster} from 'react-hot-toast';
 import 'izitoast/dist/css/iziToast.min.css';
 import {results} from "../utils/types";
@@ -19,14 +19,14 @@ const App:FC = () => {
     const [page, setPage] = useState<number>(1);
     const [data, setData] = useState<results[]>([]);
     const [state, setState] = useState<StateMachine>('idle')
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string>('');
     const [modalIsOpen, setIsOpen] = useState<boolean>(false);
     const [modalImage, setModalImage] = useState<string>('');
 
     useEffect((): void => {
         if (query !== '' && page === 1) {
             setState('pending')
-            setError(null);
+            setError('');
             getImages(query, page).then((res) => {
 
                 if (res.data.total === 0) {
@@ -43,7 +43,7 @@ const App:FC = () => {
 
         if(page !== 1){
             setState('pending')
-            setError(null);
+            setError('');
             getImages(query, page).then((res) => {
                 setData([...data, ...res.data.results])
                 setState('resolve')
