@@ -1,12 +1,12 @@
 import ImageCard from '../ImageCard/ImageCard';
 import {List} from './ImageGallery.styled.js'
-import {results} from "../../utils/types";
+import {Results} from "../../utils/types";
 import {FC} from 'react'
 
 
 interface IImageGalleryProps {
-    data:results[],
-    onImageClick: (cardData:results) => void
+    data:Results[],
+    onImageClick: (cardData:Results) => void
 }
 const ImageGallery:FC<IImageGalleryProps> = ({data, onImageClick}) => {
     return <List>

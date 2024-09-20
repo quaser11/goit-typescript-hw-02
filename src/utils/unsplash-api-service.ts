@@ -1,14 +1,14 @@
 import axios from 'axios';
-import {total, results, total_pages} from "./types";
+import {Total, Results, TotalPages} from "./types";
 
 const BASE_KEY:string = 'H0wnL8wDc_HOffizgr_1FPbAZzKuehHMD0KfQfQMqS4';
 axios.defaults.baseURL = 'https://api.unsplash.com';
 
 interface IResponse {
     data: {
-        total: total,
-        results: results[],
-        total_pages: total_pages,
+        total: Total,
+        results: Results[],
+        total_pages: TotalPages,
     }
 }
 

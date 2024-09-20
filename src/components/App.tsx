@@ -9,7 +9,7 @@ import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import ImageModal from "./ImageModal/ImageModal";
 import toast, {Toaster} from 'react-hot-toast';
 import 'izitoast/dist/css/iziToast.min.css';
-import {results} from "../utils/types";
+import {Results} from "../utils/types";
 
 // state machine = idle, pending, reject, resolve
 type StateMachine = "idle" | "pending" | "reject" | "resolve"
@@ -17,7 +17,7 @@ type StateMachine = "idle" | "pending" | "reject" | "resolve"
 const App:FC = () => {
     const [query, setQuery] = useState<string>('');
     const [page, setPage] = useState<number>(1);
-    const [data, setData] = useState<results[]>([]);
+    const [data, setData] = useState<Results[]>([]);
     const [state, setState] = useState<StateMachine>('idle')
     const [error, setError] = useState<string>('');
     const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -81,7 +81,7 @@ const App:FC = () => {
         setModalImage(image)
     }
 
-    const onSmallImageClick:(cardData:results) => void = (cardData) => {
+    const onSmallImageClick:(cardData:Results) => void = (cardData) => {
         openModal()
 
         getModalImage(cardData.urls.regular)
